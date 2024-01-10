@@ -1,0 +1,7 @@
+image: src/ro_bot_mo_del_pkg/maps/new_office.pgm
+resolution: 0.050000
+origin: [-28.733294, -14.162961, 0.000000]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196
+

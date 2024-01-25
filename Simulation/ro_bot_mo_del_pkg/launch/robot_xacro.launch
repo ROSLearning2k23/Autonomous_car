@@ -1,0 +1,66 @@
+<?xml version ="1.0"?>
+
+<!-- Creating launch environment -->
+<launch>
+
+<arg name="move_forward_only" default="false"/>
+
+<include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <!--<arg name="world_name" value="worlds/willowgarage.world"/>-->
+    <arg name="world_name" value="$(find ro_bot_mo_del_pkg)/world/Office.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <!--<arg name="recording" value="false"/>-->
+    <arg name="debug" value="false"/>
+</include>
+
+<!--<include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="worlds/mud.world"/> 
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/> 
+    <arg name="recording" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>-->
+
+<!-- Loading robot description -->
+    <param name="robot_description" command="$(find xacro)/xacro '$(find ro_bot_mo_del_pkg)/urdf/robot.xacro'"/>
+    
+<!-- Loading robot state publisher node -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+    
+<!--Joint state Publisher-->
+    <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
+    
+<!-- Robot Localisation -->	
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization">
+	<rosparam command="load" file="$(find fuse_data_localization)/config/ekf_config.yaml"/>
+    </node>
+
+<!-- Map Server -->
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find ro_bot_mo_del_pkg)/maps/final_office_map.yaml"/>
+
+<!-- amcl-node -->
+    <node pkg="amcl" type="amcl" name="amcl"/>
+		
+<!-- Slam node -->
+    <!--<node pkg="slam_toolbox" type="async_slam_toolbox_node" name="slam_toolbox" output="screen">
+     	<rosparam command="load" file="$(find slam_toolbox)/config/mapper_params_online_async.yaml" />
+    </node>-->
+        
+<!-- move_base node -->
+    <include file="$(find ro_bot_mo_del_pkg)/launch/move_base.launch">
+    	<arg name="move_forward_only" value="$(arg move_forward_only)"/>
+    </include>
+
+   
+<!-- Spawning the robot in Rviz-->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find ro_bot_mo_del_pkg)/rviz/robot.rviz"/>
+    
+<!-- Spawning four wheeler urdf model -->
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model robot_model -param robot_description"/>
+
+</launch>

@@ -16,7 +16,7 @@ class AmrOdom():
         self.timestamp = rospy.Time()
 
         # Parameters
-        self.Wt = 0.2105  # m
+        self.Wt = 0.415  # m
         self.wheel_radius = 0.0485  # Replace with your robot's wheel radius in meters
 
         # Robot body frame information

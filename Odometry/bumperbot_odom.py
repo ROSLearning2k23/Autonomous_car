@@ -74,7 +74,7 @@ class AmrOdom():
     #     odom = Odometry()
     #     odom.header.stamp = now
     #     odom.header.frame_id = "odom"
-    #     odom.child_frame_id = "base_footprint"
+    #     odom.child_frame_id = "base_link"
     #     odom.pose.pose.position.x = self.x_
     #     odom.pose.pose.position.y = self.y_
     #     odom.pose.pose.position.z = 0.0
